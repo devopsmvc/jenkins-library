@@ -3,9 +3,9 @@
 pipeline {
     agent any
 
-    // tools {
-    //     maven 'Maven3'
-    // }
+    tools {
+        maven 'Maven3'
+    }
 
     environment {
         SONARQUBE_URL = 'http://172.31.64.193:9000'
@@ -14,12 +14,20 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                buildApp()
+                script {
+                    withMaven(maven: 'Maven3') {
+                        buildApp()
+                    }
+                }
             }
         }
         stage('Test') {
             steps {
-                testApp()
+                script {
+                    withMaven(maven: 'Maven3') {
+                        testApp()
+                    }
+                }
             }
         }
         stage('Code Quality') {
@@ -27,7 +35,7 @@ pipeline {
                 script {
                     echo "SonarQube URL: ${env.SONARQUBE_URL}"
                     withSonarQubeEnv('SonarQube') {
-                        sh 'mvn sonar:sonar -Dsonar.host.url=$SONARQUBE_URL'
+                        sh 'mvn sonar:sonar -Dsonar.host.url=$SONARQUBE_URL -X'
                     }
                 }
             }
