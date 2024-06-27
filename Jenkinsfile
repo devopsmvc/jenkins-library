@@ -29,6 +29,7 @@ pipeline {
                     withSonarQubeEnv('SonarQube') {
                         sh 'mvn sonar:sonar -Dsonar.host.url=$SONARQUBE_URL'
                     }
+                }
             }
         }
         stage('Deploy') {
