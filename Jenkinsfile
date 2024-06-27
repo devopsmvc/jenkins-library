@@ -24,7 +24,10 @@ pipeline {
         }
         stage('Code Quality') {
             steps {
-                checkCodeQuality()
+                script {
+                    echo "SonarQube URL: ${env.SONARQUBE_URL}"
+                    withSonarQubeEnv('SonarQube') {
+                        sh 'mvn sonar:sonar -Dsonar.host.url=$SONARQUBE_URL'
             }
         }
         stage('Deploy') {
